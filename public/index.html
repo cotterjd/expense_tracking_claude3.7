@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget Phi</title>
+  <link rel="manifest" href="/manifest.json">
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; background: #f7f7f7; }
+    .container { max-width: 400px; margin: 2rem auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 2rem; }
+    h1 { text-align: center; }
+    .input-row { display: flex; gap: 1rem; margin-bottom: 1rem; }
+    input[type="text"], input[type="number"] { flex: 1; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; }
+    button { padding: 0.5rem 1rem; border: none; border-radius: 4px; background: #007bff; color: #fff; cursor: pointer; }
+    button:disabled { background: #aaa; }
+    .category-list { margin-top: 2rem; }
+    .category { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #eee; cursor: pointer; }
+    .popup, .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .popup-content, .modal-content { background: #fff; padding: 2rem; border-radius: 8px; min-width: 300px; }
+    .category-actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
+    .expense-list { margin-top: 1rem; }
+    .expense { display: flex; justify-content: space-between; padding: 0.25rem 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Budget Phi</h1>
+    <div class="input-row">
+      <input type="text" id="expenseName" placeholder="Expense name">
+      <input type="number" id="expenseAmount" placeholder="Amount" min="0">
+      <button id="submitExpense">Submit</button>
+    </div>
+    <div class="category-list" id="categoryList"></div>
+  </div>
+  <div id="popup" style="display:none;"></div>
+  <script src="/main.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js');
+      });
+    }
+  </script>
+</body>
+</html>
