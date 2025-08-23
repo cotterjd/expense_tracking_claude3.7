@@ -35,12 +35,36 @@ class BudgetApp {
             this.handleSubmit();
         });
 
-        // Enter key on inputs
+        // Enter key on description input
         document.getElementById('description').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.handleSubmit();
         });
-        document.getElementById('amount').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') this.handleSubmit();
+
+        // Currency input logic for amount
+        const amountInput = document.getElementById('amount');
+        let amountDigits = "";
+        amountInput.value = "$0.00";
+        amountInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace') {
+                amountDigits = amountDigits.slice(0, -1);
+                e.preventDefault();
+            } else if (/^[0-9]$/.test(e.key)) {
+                if (amountDigits.length < 9) { // limit to 9 digits
+                    amountDigits += e.key;
+                }
+                e.preventDefault();
+            } else if (e.key === 'Enter') {
+                this.handleSubmit();
+                e.preventDefault();
+            } else if (e.key.length === 1) {
+                // Prevent any other character
+                e.preventDefault();
+            }
+            amountInput.value = this.formatCurrency(amountDigits);
+        });
+        amountInput.addEventListener('input', (e) => {
+            // Prevent manual input (paste, etc.)
+            amountInput.value = this.formatCurrency(amountDigits);
         });
 
         // Modal close buttons
@@ -66,12 +90,17 @@ class BudgetApp {
         document.getElementById('new-category').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.addNewCategory();
         });
+
+        // Store amountDigits for later use
+        this._amountDigits = () => amountDigits;
+        this._resetAmountDigits = () => { amountDigits = ""; amountInput.value = "$0.00"; };
     }
 
     // Handle expense submission
     handleSubmit() {
         const description = document.getElementById('description').value.trim();
-        const amount = parseFloat(document.getElementById('amount').value);
+        const amountDigits = this._amountDigits();
+        const amount = amountDigits ? parseInt(amountDigits, 10) / 100 : 0;
 
         if (!description || !amount || amount <= 0) {
             alert('Please enter a valid description and amount.');
@@ -80,6 +109,14 @@ class BudgetApp {
 
         this.currentExpense = { description, amount };
         this.showCategoryModal();
+    }
+    // Format currency from digits
+    formatCurrency(digits) {
+        if (!digits || digits === "") return "$0.00";
+        let num = parseInt(digits, 10);
+        let cents = num % 100;
+        let dollars = Math.floor(num / 100);
+        return `$${dollars.toLocaleString()}.${cents.toString().padStart(2, '0')}`;
     }
 
     // Show category selection modal
@@ -247,7 +284,7 @@ class BudgetApp {
     // Clear form
     clearForm() {
         document.getElementById('description').value = '';
-        document.getElementById('amount').value = '';
+        this._resetAmountDigits();
         document.getElementById('description').focus();
     }
 
