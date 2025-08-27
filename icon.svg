@@ -1,0 +1,18 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="#2196F3" stroke="#1976D2" stroke-width="8"/>
+  
+  <!-- Wallet/card background -->
+  <rect x="120" y="180" width="272" height="180" rx="20" ry="20" fill="#4CAF50" opacity="0.9"/>
+  <rect x="120" y="180" width="272" height="50" rx="20" ry="20" fill="#388E3C"/>
+  
+  <!-- Dollar sign -->
+  <text x="256" y="310" font-family="Arial, sans-serif" font-size="120" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">$</text>
+  
+  <!-- Decorative coins -->
+  <circle cx="180" cy="140" r="25" fill="#FFD700" stroke="#FFA000" stroke-width="3"/>
+  <text x="180" y="148" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#F57C00" text-anchor="middle">¢</text>
+  
+  <circle cx="332" cy="140" r="25" fill="#FFD700" stroke="#FFA000" stroke-width="3"/>
+  <text x="332" y="148" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#F57C00" text-anchor="middle">¢</text>
+</svg>
