@@ -91,6 +91,11 @@ class BudgetApp {
             if (e.key === 'Enter') this.addNewCategory();
         });
 
+        // Reset all categories button
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            this.resetAllCategories();
+        });
+
         // Store amountDigits for later use
         this._amountDigits = () => amountDigits;
         this._resetAmountDigits = () => { amountDigits = ""; amountInput.value = "$0.00"; };
@@ -98,14 +103,9 @@ class BudgetApp {
 
     // Handle expense submission
     handleSubmit() {
-        const description = document.getElementById('description').value.trim();
+        const description = document.getElementById('description').value.trim() || 'Untitled Expense';
         const amountDigits = this._amountDigits();
         const amount = amountDigits ? parseInt(amountDigits, 10) / 100 : 0;
-
-        if (!description || !amount || amount <= 0) {
-            alert('Please enter a valid description and amount.');
-            return;
-        }
 
         this.currentExpense = { description, amount };
         this.showCategoryModal();
@@ -266,7 +266,10 @@ class BudgetApp {
                         <div class="expense-description">${expense.description}</div>
                         <div class="expense-date">${date}</div>
                     </div>
-                    <div class="expense-amount">$${expense.amount.toFixed(2)}</div>
+                    <div class="expense-controls">
+                        <div class="expense-amount">$${expense.amount.toFixed(2)}</div>
+                        <button class="btn-danger delete-expense" onclick="app.deleteExpense('${expense.id}')">Delete</button>
+                    </div>
                 `;
                 expenseList.appendChild(item);
             });
@@ -324,6 +327,29 @@ class BudgetApp {
             }
         };
         reader.readAsText(file);
+    }
+
+    // Delete a specific expense
+    deleteExpense(expenseId) {
+        if (confirm('Are you sure you want to delete this expense?')) {
+            this.expenses = this.expenses.filter(expense => expense.id !== expenseId);
+            this.saveExpenses();
+            this.renderCategories();
+            
+            // Close and reopen the modal to refresh the list
+            const modal = document.getElementById('expense-modal');
+            modal.style.display = 'none';
+        }
+    }
+
+    // Reset all categories (delete all expenses)
+    resetAllCategories() {
+        if (confirm('Are you sure you want to reset all categories? This will delete ALL expenses permanently.')) {
+            this.expenses = [];
+            this.saveExpenses();
+            this.renderCategories();
+            alert('All expenses have been deleted.');
+        }
     }
 }
 

@@ -118,10 +118,16 @@ input[type="number"]:focus {
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-.categories-section h2 {
+.categories-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
+}
+
+.categories-section h2 {
+    margin: 0;
     color: #333;
-    text-align: center;
 }
 
 .categories-grid {
@@ -267,6 +273,27 @@ input[type="number"]:focus {
     font-weight: 700;
     color: #2196F3;
     font-size: 18px;
+}
+
+.expense-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.delete-expense {
+    padding: 5px 10px;
+    font-size: 12px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.delete-expense:hover {
+    background: #c82333;
 }
 
 .expense-date {
