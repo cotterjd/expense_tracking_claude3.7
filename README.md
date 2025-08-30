@@ -1,4 +1,4 @@
-# Budget Tracker PWA
+# Budget Phi
 
 A simple Progressive Web App (PWA) for tracking expenses and managing budgets.
 
