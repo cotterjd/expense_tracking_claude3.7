@@ -3,7 +3,7 @@ class BudgetApp {
         this.categories = this.loadCategories();
         this.expenses = this.loadExpenses();
         this.currentExpense = null;
-        this.currentView = 'all-time'; // Track current view
+        this.currentView = 'year'; // Track current view - changed from 'all-time'
         
         this.initializeEventListeners();
         this.renderCategories();
@@ -99,8 +99,8 @@ class BudgetApp {
         });
 
         // View toggle buttons
-        document.getElementById('all-time-view').addEventListener('click', () => {
-            this.switchView('all-time');
+        document.getElementById('year-view').addEventListener('click', () => {
+            this.switchView('year');
         });
 
         document.getElementById('month-view').addEventListener('click', () => {
@@ -210,15 +210,22 @@ class BudgetApp {
     getCategoryTotal(category) {
         let filteredExpenses = this.expenses.filter(expense => expense.category === category);
         
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        
         if (this.currentView === 'month') {
-            const now = new Date();
             const currentMonth = now.getMonth();
-            const currentYear = now.getFullYear();
             
             filteredExpenses = filteredExpenses.filter(expense => {
                 const expenseDate = new Date(expense.date);
                 return expenseDate.getMonth() === currentMonth && 
                        expenseDate.getFullYear() === currentYear;
+            });
+        } else {
+            // Year view - filter by current year
+            filteredExpenses = filteredExpenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate.getFullYear() === currentYear;
             });
         }
         
@@ -384,12 +391,12 @@ class BudgetApp {
     updateRunningTotal() {
         let filteredExpenses;
         let label, subtitle;
+        const now = new Date();
+        const currentYear = now.getFullYear();
         
         if (this.currentView === 'month') {
             // Filter expenses for current month
-            const now = new Date();
             const currentMonth = now.getMonth();
-            const currentYear = now.getFullYear();
             
             filteredExpenses = this.expenses.filter(expense => {
                 const expenseDate = new Date(expense.date);
@@ -400,10 +407,14 @@ class BudgetApp {
             label = `${now.toLocaleString('default', { month: 'long' })} ${currentYear}`;
             subtitle = 'This month\'s expenses';
         } else {
-            // All time view
-            filteredExpenses = this.expenses;
-            label = 'Total Spending';
-            subtitle = 'All time expenses';
+            // Year view - filter expenses for current year
+            filteredExpenses = this.expenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate.getFullYear() === currentYear;
+            });
+            
+            label = `${currentYear} Spending`;
+            subtitle = 'This year\'s expenses';
         }
         
         const total = filteredExpenses.reduce((sum, expense) => sum + expense.amount, 0);
