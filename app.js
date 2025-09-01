@@ -6,6 +6,7 @@ class BudgetApp {
         
         this.initializeEventListeners();
         this.renderCategories();
+        this.updateRunningTotal();
     }
 
     // Load data from localStorage
@@ -156,6 +157,7 @@ class BudgetApp {
         this.expenses.push(expense);
         this.saveExpenses();
         this.renderCategories();
+        this.updateRunningTotal();
         this.closeModal(document.getElementById('category-modal'));
         this.clearForm();
     }
@@ -189,6 +191,7 @@ class BudgetApp {
             this.saveCategories();
             this.saveExpenses();
             this.renderCategories();
+            this.updateRunningTotal();
             this.showCategoryModal(); // Refresh the modal
         }
     }
@@ -320,6 +323,7 @@ class BudgetApp {
                     this.saveCategories();
                     this.saveExpenses();
                     this.renderCategories();
+                    this.updateRunningTotal();
                     alert('Data imported successfully!');
                 }
             } catch (error) {
@@ -335,6 +339,7 @@ class BudgetApp {
             this.expenses = this.expenses.filter(expense => expense.id !== expenseId);
             this.saveExpenses();
             this.renderCategories();
+            this.updateRunningTotal();
             
             // Close and reopen the modal to refresh the list
             const modal = document.getElementById('expense-modal');
@@ -348,7 +353,17 @@ class BudgetApp {
             this.expenses = [];
             this.saveExpenses();
             this.renderCategories();
+            this.updateRunningTotal();
             alert('All expenses have been deleted.');
+        }
+    }
+
+    // Update running total display
+    updateRunningTotal() {
+        const total = this.expenses.reduce((sum, expense) => sum + expense.amount, 0);
+        const totalElement = document.getElementById('total-amount');
+        if (totalElement) {
+            totalElement.textContent = `$${total.toFixed(2)}`;
         }
     }
 }
