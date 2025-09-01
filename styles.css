@@ -41,6 +41,37 @@ header h1 {
     margin-bottom: 30px;
 }
 
+.view-toggles {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.view-btn {
+    padding: 8px 20px;
+    border: 2px solid #667eea;
+    background: transparent;
+    color: #667eea;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.view-btn:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.view-btn.active {
+    background: #667eea;
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
 .total-card {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;

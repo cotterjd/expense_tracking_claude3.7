@@ -35,12 +35,16 @@
 
             <!-- Running Total Section -->
             <div class="total-section">
+                <div class="view-toggles">
+                    <button id="all-time-view" class="view-btn active">All Time</button>
+                    <button id="month-view" class="view-btn">This Month</button>
+                </div>
                 <div class="total-card">
                     <div class="total-header">
-                        <span class="total-label">Total Spending</span>
+                        <span class="total-label" id="total-label">Total Spending</span>
                         <span class="total-amount" id="total-amount">$0.00</span>
                     </div>
-                    <div class="total-subtitle">All time expenses</div>
+                    <div class="total-subtitle" id="total-subtitle">All time expenses</div>
                 </div>
             </div>
 

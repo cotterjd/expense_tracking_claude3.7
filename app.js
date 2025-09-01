@@ -3,6 +3,7 @@ class BudgetApp {
         this.categories = this.loadCategories();
         this.expenses = this.loadExpenses();
         this.currentExpense = null;
+        this.currentView = 'all-time'; // Track current view
         
         this.initializeEventListeners();
         this.renderCategories();
@@ -95,6 +96,15 @@ class BudgetApp {
         // Reset all categories button
         document.getElementById('reset-btn').addEventListener('click', () => {
             this.resetAllCategories();
+        });
+
+        // View toggle buttons
+        document.getElementById('all-time-view').addEventListener('click', () => {
+            this.switchView('all-time');
+        });
+
+        document.getElementById('month-view').addEventListener('click', () => {
+            this.switchView('month');
         });
 
         // Store amountDigits for later use
@@ -198,9 +208,21 @@ class BudgetApp {
 
     // Calculate total amount for a category
     getCategoryTotal(category) {
-        return this.expenses
-            .filter(expense => expense.category === category)
-            .reduce((total, expense) => total + expense.amount, 0);
+        let filteredExpenses = this.expenses.filter(expense => expense.category === category);
+        
+        if (this.currentView === 'month') {
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            filteredExpenses = filteredExpenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate.getMonth() === currentMonth && 
+                       expenseDate.getFullYear() === currentYear;
+            });
+        }
+        
+        return filteredExpenses.reduce((total, expense) => total + expense.amount, 0);
     }
 
     // Get expenses for a category
@@ -360,11 +382,52 @@ class BudgetApp {
 
     // Update running total display
     updateRunningTotal() {
-        const total = this.expenses.reduce((sum, expense) => sum + expense.amount, 0);
-        const totalElement = document.getElementById('total-amount');
-        if (totalElement) {
-            totalElement.textContent = `$${total.toFixed(2)}`;
+        let filteredExpenses;
+        let label, subtitle;
+        
+        if (this.currentView === 'month') {
+            // Filter expenses for current month
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            filteredExpenses = this.expenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate.getMonth() === currentMonth && 
+                       expenseDate.getFullYear() === currentYear;
+            });
+            
+            label = `${now.toLocaleString('default', { month: 'long' })} ${currentYear}`;
+            subtitle = 'This month\'s expenses';
+        } else {
+            // All time view
+            filteredExpenses = this.expenses;
+            label = 'Total Spending';
+            subtitle = 'All time expenses';
         }
+        
+        const total = filteredExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+        
+        const totalElement = document.getElementById('total-amount');
+        const labelElement = document.getElementById('total-label');
+        const subtitleElement = document.getElementById('total-subtitle');
+        
+        if (totalElement) totalElement.textContent = `$${total.toFixed(2)}`;
+        if (labelElement) labelElement.textContent = label;
+        if (subtitleElement) subtitleElement.textContent = subtitle;
+    }
+
+    // Switch between view modes
+    switchView(view) {
+        this.currentView = view;
+        
+        // Update button states
+        document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`${view}-view`).classList.add('active');
+        
+        // Update totals and categories for the new view
+        this.updateRunningTotal();
+        this.renderCategories();
     }
 }
 
